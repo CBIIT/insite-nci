@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="NIFE, Search Portal" />
+    <title>NIFE - Image Search Portal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../static/metadata/styles.css" />
+    <style>
+      .bg-gradient-custom {
+        background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+      }
+      .search-container {
+        position: relative;
+      }
+      .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+      }
+      .search-input {
+        padding-left: 45px;
+      }
+      .card {
+        transition: all 0.3s ease;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      .result-card-image {
+        height: 180px;
+        object-fit: cover;
+        background: linear-gradient(to bottom right, #e9ecef, #dee2e6);
+        position: relative;
+        overflow: hidden;
+      }
+      .result-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+      .card:hover .result-card-image img {
+        transform: scale(1.05);
+      }
+      .thumbnail-loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(233, 236, 239, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .result-count {
+        font-size: 0.85rem;
+        color: #6c757d;
+      }
+      .view-toggle .btn.active {
+        background-color: #e9ecef;
+        color: #495057;
+      }
+      .algorithm-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+      }
+      .quality-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 0.75rem;
+        padding: 0.35rem 0.7rem;
+      }
+    </style>
+  </head>
+  <body class="min-vh-100 d-flex flex-column bg-gradient-custom">
+    <header>
+      <div class="container my-2 my-md-1 mb-1">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+          <a class="d-inline-block py-2" rel="noopener noreferrer" href="https://www.cancer.gov/">
+            <img src="../static/metadata/assets/logo.svg" height="60" alt="National Cancer Institute Logo" class="mw-100" />
+          </a>
+        </div>
+      </div>
+      <div class="bg-primary text-white py-2">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h1 class="h4 mb-0 d-flex align-items-center">
+                <i class="bi bi-microscope me-2"></i>
+                <span>NIFE Image Search</span>
+                <small class="ms-2 fw-normal opacity-75">NCI Imaging Facilities Environment</small>
+              </h1>
+            </div>
+            <div class="col-md-6 d-flex justify-content-md-end mt-2 mt-md-0">
+              <span class="badge bg-light text-primary px-3 py-2 d-flex align-items-center">
+                <i class="bi bi-database me-2"></i>
+                <span class="fw-bold" id="total-count">0</span> Images
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container py-4 flex-grow-1">
+      <!-- Search Section -->
+      <div class="card shadow-lg mb-4 border-0 rounded-3">
+        <div class="card-body p-4">
+          <!-- Search Mode Tabs -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <ul class="nav nav-tabs" id="searchModeTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="simple-search-tab" data-bs-toggle="tab" data-bs-target="#simple-search" type="button" role="tab" aria-controls="simple-search" aria-selected="true">Simple Search</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="advanced-search-tab" data-bs-toggle="tab" data-bs-target="#advanced-search" type="button" role="tab" aria-controls="advanced-search" aria-selected="false">Advanced Search</button>
+              </li>
+            </ul>
+            <button class="btn btn-sm btn-outline-secondary d-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="false" aria-controls="filtersCollapse">
+              <i class="bi bi-funnel me-1"></i>
+              Filters
+              <i class="bi bi-chevron-down ms-1"></i>
+            </button>
+          </div>
+
+          <!-- Search Form Tabs -->
+          <div class="tab-content" id="searchModeTabsContent">
+            <!-- Simple Search Tab -->
+            <div class="tab-pane fade show active" id="simple-search" role="tabpanel" aria-labelledby="simple-search-tab">
+              <form id="simple-search-form">
+                <div class="search-container">
+                  <i class="bi bi-search search-icon"></i>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-lg search-input" 
+                    id="simple-query" 
+                    name="query" 
+                    placeholder="Search by slide ID, tissue type, diagnosis, or any metadata..."
+                    value="{{ query }}">
+                  <button type="submit" class="btn btn-primary position-absolute end-0 top-0 bottom-0 px-4 rounded-end">Search</button>
+                </div>
+                <!-- Hidden fields to maintain other params -->
+                {% for item in datatype %}
+                <input type="hidden" name="datatype" value="{{ item }}">
+                {% endfor %}
+                {% for item in field %}
+                <input type="hidden" name="field" value="{{ item }}">
+                {% endfor %}
+              </form>
+            </div>
+            
+            <!-- Advanced Search Tab -->
+            <div class="tab-pane fade" id="advanced-search" role="tabpanel" aria-labelledby="advanced-search-tab">
+              <form id="advanced-search-form">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label for="object-type" class="form-label">Object Type</label>
+                    <select class="form-select" id="object-type" name="datatype">
+                      <option value="">All Object Types</option>
+                      <option value="images" {% if 'images' in datatype %}selected{% endif %}>Images</option>
+                      <option value="datasets" {% if 'datasets' in datatype %}selected{% endif %}>Datasets</option>
+                      <option value="projects" {% if 'projects' in datatype %}selected{% endif %}>Projects</option>
+                      <option value="screens" {% if 'screens' in datatype %}selected{% endif %}>Screens</option>
+                      <option value="plates" {% if 'plates' in datatype %}selected{% endif %}>Plates</option>
+                      <option value="wells" {% if 'wells' in datatype %}selected{% endif %}>Wells</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="search-field" class="form-label">Search Field</label>
+                    <select class="form-select" id="search-field" name="field">
+                      <option value="">All Fields</option>
+                      <option value="name" {% if 'name' in field %}selected{% endif %}>Name</option>
+                      <option value="description" {% if 'description' in field %}selected{% endif %}>Description</option>
+                      <option value="annotation" {% if 'annotation' in field %}selected{% endif %}>Annotation</option>
+                      <option value="tag" {% if 'tag' in field %}selected{% endif %}>Tag</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="search-query" class="form-label">Search Query</label>
+                    <input type="text" class="form-control" id="search-query" name="query" placeholder="Enter search terms" value="{{ query }}">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="group-id" class="form-label">Group ID</label>
+                    <input type="number" class="form-control" id="group-id" name="searchGroup" placeholder="Filter by group ID" value="{{ searchGroup }}">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Date Range</label>
+                    <div class="row g-2">
+                      <div class="col">
+                        <input type="date" class="form-control" name="startdateinput" placeholder="Start date" value="{{ startdate }}">
+                      </div>
+                      <div class="col">
+                        <input type="date" class="form-control" name="enddateinput" placeholder="End date" value="{{ enddate }}">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Advanced Search</button>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="useAcquisitionDate" name="useAcquisitionDate" value="true" {% if useAcquisitionDate %}checked{% endif %}>
+                      <label class="form-check-label" for="useAcquisitionDate">
+                        Use acquisition date instead of import date
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Filters (Collapsible) -->
+          <div class="collapse mt-4" id="filtersCollapse">
+            <div class="border-top pt-4">
+              <h5 class="mb-3">Additional Filters</h5>
+              <div class="row g-3">
+                <div class="col-md-3">
+                  <label for="quality-filter" class="form-label">Quality Score</label>
+                  <input type="range" class="form-range" min="0" max="100" value="0" id="quality-filter">
+                  <div class="d-flex justify-content-between">
+                    <span class="small text-muted">0%</span>
+                    <span class="small text-muted">100%</span>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Analysis Status</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="completed-filter" checked>
+                    <label class="form-check-label" for="completed-filter">Completed</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="progress-filter" checked>
+                    <label class="form-check-label" for="progress-filter">In Progress</label>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Owner</label>
+                  <input type="number" class="form-control" id="owner-filter" name="ownedBy" placeholder="Owner ID" value="{{ ownedBy }}">
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                  <button type="button" class="btn btn-outline-primary w-100">Apply Filters</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-body p-4">
+          <!-- Results Header -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h2 class="h5 mb-1">Search Results</h2>
+              <p class="result-count mb-0" id="results-count">Enter a search query to see results</p>
+            </div>
+            <div class="d-flex gap-3 align-items-center">
+              <div class="btn-group view-toggle" role="group" aria-label="View Mode">
+                <button type="button" class="btn btn-sm btn-outline-secondary active" id="grid-view-btn">
+                  <i class="bi bi-grid"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="list-view-btn">
+                  <i class="bi bi-list-ul"></i>
+                </button>
+              </div>
+              <select class="form-select form-select-sm" style="width: auto;">
+                <option>Sort by Relevance</option>
+                <option>Sort by Date</option>
+                <option>Sort by Name</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Results Content -->
+          <div id="search-results" class="row g-4">
+            <!-- Results will be populated by JavaScript -->
+            <div class="col-12 text-center py-5 text-muted">
+              <i class="bi bi-search" style="font-size: 2rem;"></i>
+              <p class="mt-3">Enter a search query to find images</p>
+            </div>
+          </div>
+
+          <!-- Loading Indicator -->
+          <div id="loading-indicator" class="text-center py-5 d-none">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Searching...</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-primary text-light py-3 mt-auto">
+      <div class="container">
+        <ul class="list-inline text-start text-md-center mb-2">
+          <li class="list-inline-item d-block d-md-inline-block">
+            <a class="link-light" href="https://www.cancer.gov/" target="_blank" rel="noopener noreferrer"> Home </a>
+          </li>
+          <li class="list-inline-item d-none d-md-inline-block">|</li>
+          <li class="list-inline-item d-block d-md-inline-block">
+            <a class="link-light" target="_blank" rel="noopener noreferrer" href="mailto:NIFEsubmit@nih.gov"> Contact Us </a>
+          </li>
+          <li class="list-inline-item d-none d-md-inline-block">|</li>
+          <li class="list-inline-item d-block d-md-inline-block">
+            <a class="link-light" href="https://www.cancer.gov/global/web/policies" target="_blank" rel="noopener noreferrer"> Policies </a>
+          </li>
+          <li class="list-inline-item d-none d-md-inline-block">|</li>
+          <li class="list-inline-item d-block d-md-inline-block">
+            <a class="link-light" href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html" target="_blank" rel="noopener noreferrer">
+              HHS Vulnerability Disclosure
+            </a>
+          </li>
+        </ul>
+        <ul class="list-inline text-start text-md-center mb-0">
+          <li class="list-inline-item d-block d-md-inline-block">
+            <a class="link-light" href="https://www.hhs.gov/" target="_blank" rel="noopener noreferrer">
+              U.S. Department of Health and Human Services
+            </a>
+          </li>
+          <li class="list-inline-item d-none d-md-inline-block">|</li>
+          <li class="list-inline-item d-block d-md-inline-block">
+            <a class="link-light" href="https://www.nih.gov" target="_blank" rel="noopener noreferrer"> National Institutes of Health </a>
+          </li>
+          <li class="list-inline-item d-none d-md-inline-block">|</li>
+          <li class="list-inline-item d-block d-md-inline-block">
+            <a class="link-light" href="https://www.cancer.gov/" target="_blank" rel="noopener noreferrer"> National Cancer Institute </a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- JavaScript for Bootstrap and custom functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Set active tab based on URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('advanced') === 'true') {
+          const advancedTab = document.querySelector('#advanced-search-tab');
+          new bootstrap.Tab(advancedTab).show();
+        }
+
+        // View toggle functionality
+        const gridViewBtn = document.getElementById('grid-view-btn');
+        const listViewBtn = document.getElementById('list-view-btn');
+        const resultsContainer = document.getElementById('search-results');
+
+        gridViewBtn.addEventListener('click', function() {
+          resultsContainer.classList.remove('list-view');
+          gridViewBtn.classList.add('active');
+          listViewBtn.classList.remove('active');
+        });
+
+        listViewBtn.addEventListener('click', function() {
+          resultsContainer.classList.add('list-view');
+          listViewBtn.classList.add('active');
+          gridViewBtn.classList.remove('active');
+        });
+
+        // Form submission handling
+        const simpleSearchForm = document.getElementById('simple-search-form');
+        const advancedSearchForm = document.getElementById('advanced-search-form');
+        
+        simpleSearchForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          executeSearch(new FormData(simpleSearchForm));
+        });
+        
+        advancedSearchForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const formData = new FormData(advancedSearchForm);
+          formData.append('advanced', 'true');
+          executeSearch(formData);
+        });
+
+        // Execute search if query parameter is present
+        if (urlParams.has('query') && urlParams.get('query').trim() !== '') {
+          // Create a form data object from URL parameters
+          const formData = new FormData();
+          for (const [key, value] of urlParams.entries()) {
+            if (key === 'datatype' || key === 'field') {
+              // These can have multiple values
+              const values = urlParams.getAll(key);
+              values.forEach(val => formData.append(key, val));
+            } else {
+              formData.append(key, value);
+            }
+          }
+          executeSearch(formData);
+        }
+
+        // Function to execute search
+        function executeSearch(formData) {
+          // Show loading indicator
+          document.getElementById('loading-indicator').classList.remove('d-none');
+          document.getElementById('search-results').innerHTML = '';
+          
+          // Build the URL for the search API
+          const url = new URL('/metadata/api/search', window.location.href);
+          for (const [key, value] of formData.entries()) {
+            url.searchParams.append(key, value);
+          }
+          
+          // Fetch results from API
+          fetch(url)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(data => {
+              displayResults(data);
+              document.getElementById('loading-indicator').classList.add('d-none');
+            })
+            .catch(error => {
+              console.error('Error fetching search results:', error);
+              document.getElementById('loading-indicator').classList.add('d-none');
+              document.getElementById('search-results').innerHTML = `
+                <div class="col-12 text-center py-5 text-danger">
+                  <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+                  <p class="mt-3">An error occurred while searching. Please try again.</p>
+                </div>
+              `;
+            });
+        }
+
+        // Function to display search results
+        function displayResults(data) {
+          const resultsContainer = document.getElementById('search-results');
+          const resultsCount = document.getElementById('results-count');
+          
+          // Clear previous results
+          resultsContainer.innerHTML = '';
+          
+          // Calculate total results
+          let totalResults = 0;
+          let resultHtml = '';
+          
+          if (data.status === 'success') {
+            // Process container results
+            for (const [objectType, results] of Object.entries(data.containers || {})) {
+              totalResults += results.length;
+              results.forEach(result => {
+                resultHtml += createResultCard(result, objectType);
+              });
+            }
+            
+            // Process ID-based results
+            if (data.foundById && data.foundById.length > 0) {
+              data.foundById.forEach(result => {
+                resultHtml += createResultCard(result, result.type + 's');
+                totalResults++;
+              });
+            }
+            
+            // Update results count
+            resultsCount.textContent = `Found ${totalResults} result${totalResults !== 1 ? 's' : ''}`;
+            document.getElementById('total-count').textContent = totalResults;
+            
+            if (totalResults === 0) {
+              resultsContainer.innerHTML = `
+                <div class="col-12 text-center py-5 text-muted">
+                  <i class="bi bi-search" style="font-size: 2rem;"></i>
+                  <p class="mt-3">No results found. Try a different search term.</p>
+                </div>
+              `;
+            } else {
+              resultsContainer.innerHTML = resultHtml;
+            }
+          } else {
+            // Handle error
+            resultsContainer.innerHTML = `
+              <div class="col-12 text-center py-5 text-danger">
+                <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+                <p class="mt-3">${data.message || 'An error occurred while searching'}</p>
+              </div>
+            `;
+          }
+        }
+
+        // Function to create result card HTML
+        function createResultCard(result, objectType) {
+          const name = result.name || 'Unnamed';
+          const description = result.description || 'No description';
+          const id = result.id;
+          
+          // Get icon based on object type
+          let icon = 'image';
+          switch(objectType) {
+            case 'projects': icon = 'folder'; break;
+            case 'datasets': icon = 'collection'; break;
+            case 'screens': icon = 'grid-3x3'; break;
+            case 'plates': icon = 'grid-3x2'; break;
+            case 'wells': icon = 'grid-1x2'; break;
+            default: icon = 'image';
+          }
+          
+          // Get singular object type
+          const singularType = objectType.endsWith('s') ? objectType.slice(0, -1) : objectType;
+          
+          // Create a quality score (mock data for demo)
+          
+          return `
+            <div class="col-md-4">
+              <div class="card h-100 border-0 shadow-sm">
+                <div class="position-relative">
+                  <div class="result-card-image d-flex justify-content-center align-items-center">
+                    ${objectType === 'images' ? 
+                      `<img 
+                        src="/webgateway/render_thumbnail/${id}" 
+                        alt="${name}" 
+                        loading="lazy"
+                        onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML += '<i class=\'bi bi-image\' style=\'font-size: 3rem; opacity: 0.6;\'></i>';"
+                      >` 
+                      : 
+                      `<i class="bi bi-${icon}" style="font-size: 3rem; opacity: 0.6;"></i>`
+                    }
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title mb-0 text-truncate">${name}</h5>
+                  </div>
+                  <div class="small mb-3 d-flex gap-2 align-items-center">
+                    <span class="badge bg-secondary">${singularType}</span>
+                    <span class="text-muted">ID: ${id}</span>
+                  </div>
+                  <p class="card-text small text-truncate">${description}</p>
+                  ${result.owner ? 
+                    `<div class="small text-muted mb-2">
+                      <i class="bi bi-person"></i> ${result.owner.name || 'Unknown'}
+                    </div>` : ''}
+                  ${result.acquisition_date ? 
+                    `<div class="small text-muted">
+                      <i class="bi bi-calendar"></i> ${new Date(result.acquisition_date).toLocaleDateString()}
+                    </div>` : ''}
+                </div>
+                <div class="card-footer bg-transparent border-top d-flex justify-content-between align-items-center">
+                  <div class="d-flex flex-wrap gap-1">
+                    <span class="badge bg-info bg-opacity-10 text-info algorithm-badge">
+                      <i class="bi bi-cpu"></i> Algorithm
+                    </span>
+                  </div>
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="bi bi-three-dots"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      ${objectType === 'images' ? 
+                        `<li><a class="dropdown-item" href="/webclient/?show=image-${id}" target="_blank"><i class="bi bi-eye me-2"></i>View in OMERO</a></li>
+                         <li><a class="dropdown-item" href="/webgateway/img_detail/${id}/" target="_blank"><i class="bi bi-search me-2"></i>View Detail</a></li>` 
+                        : 
+                        `<li><a class="dropdown-item" href="/webclient/?show=${singularType}-${id}" target="_blank"><i class="bi bi-eye me-2"></i>View</a></li>`
+                      }
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-download me-2"></i>Download</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-info-circle me-2"></i>Details</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      });
+    </script>
+  </body>
+</html>

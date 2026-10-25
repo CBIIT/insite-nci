@@ -1,0 +1,31 @@
+# OMERO.web configuration
+config set omero.web.application_server.host 0.0.0.0
+config set omero.web.check_version false
+config set omero.web.secure true
+config set omero.web.server_list '[["server", 4064, "server"]]'
+config set omero.web.time_zone 'America/New_York'
+
+# OMERO.web configuration
+config set omero.web.application_server.host 0.0.0.0
+config set omero.web.check_version false
+config set omero.web.secure true
+config set omero.web.server_list '[["localhost", 4064, "server"]]'
+config set omero.web.time_zone 'America/New_York'
+
+# UI configuration
+config append omero.web.staticfile_dirs '"/opt/omero/OMERO.web/static"'
+config append omero.web.template_dirs '"/opt/omero/OMERO.web/templates"'
+config set omero.web.index_template 'index.html'
+config set omero.web.favicon_url 'assets/favicon.ico'
+config set omero.web.login_logo '/static/assets/images/logo.svg'
+config set omero.web.login.show_client_downloads false
+
+# Middleware
+config append omero.web.middleware '{"index": 0, "class": "whitenoise.middleware.WhiteNoiseMiddleware"}'
+
+# Custom apps
+config set omero.web.apps '["omero_plus", "omero_figure", "omero_iviewer", "pathviewer", "metadata", "webapp"]'
+# config append omero.web.apps '"webapp"'
+# config append omero.web.ui.top_links '["Webapp", "webapp_index", {"title": "Open app in new tab", "target": "_blank"}]'
+# config append omero.web.apps '"metadata"'
+# config append omero.web.ui.top_links '["Metadata", "metadata_index", {"title": "Open metadata editor in new tab", "target": "_blank"}]'

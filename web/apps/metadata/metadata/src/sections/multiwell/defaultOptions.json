@@ -1,0 +1,14 @@
+{
+  "plateType": [
+    { "value": "6", "label": "6 Wells (2x3)", "rows": 2, "columns": 3 },
+    { "value": "12", "label": "12 Wells (3x4)", "rows": 3, "columns": 4 },
+    { "value": "24", "label": "24 Wells (4x6)", "rows": 4, "columns": 6 },
+    { "value": "96", "label": "96 Wells (8x12)", "rows": 8, "columns": 12 },
+    { "value": "384", "label": "384 Wells (16x24)", "rows": 16, "columns": 24 }
+  ],
+  "experimentalStatus": [
+    { "value": "Test", "label": "Test" },
+    { "value": "Control", "label": "Control" },
+    { "value": "N/A", "label": "N/A"}
+  ]
+}

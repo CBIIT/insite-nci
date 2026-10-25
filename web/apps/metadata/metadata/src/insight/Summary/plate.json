@@ -1,0 +1,89 @@
+{
+    "status": "success",
+    "data": [
+        {
+            "id": 666,
+            "name": "240408-IQL-POP-030-NFISH-ISS-Test10-PNATelC-AfterRCA_20240408_141108",
+            "description": "",
+            "tags": [],
+            "Dataset": "240408-IQL-POP-030-NFISH-ISS-Test10-PNATelC-AfterRCA_20240408_141108",
+            "Project": "Isabel",
+            "Storage": "Opera_Data",
+            "Sub_Storage": "CV8000_Images",
+            "User": "MeasurementData"
+        },
+        {
+            "id": 667,
+            "name": "240410-IQL-POP-030-NFISH-ISS-Test10-UnmodTelC-AfterRCA_20240410_121403",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 668,
+            "name": "240424-IQL-POP-030-NFISH-ISS-Test10-Repeat-PNATelC-ISSCheck_20240424_120716",
+            "description": "",
+            "tags": [],
+            "Dataset": "240424-IQL-POP-030-NFISH-ISS-Test10-Repeat-PNATelC-ISSCheck_20240424_120716",
+            "Project": "Isabel",
+            "Storage": "Opera_Data",
+            "Sub_Storage": "CV8000_Images",
+            "User": "MeasurementData"
+        },
+        {
+            "id": 356,
+            "name": "Images_OMERO_Plus_Test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 354,
+            "name": "HT000822",
+            "description": "",
+            "tags": [],
+            "Imaging facility": "NCI High-Throughput Imaging Facility - Gianluca Pegoraro",
+            "Principal investigator": "PEGORARO, GIANLUCA",
+            "Project scientist": "Ozbun, Laurent",
+            "Dataset id": "210119_sgRNA_Epigenome_Screen",
+            "Imaging method": "Spinning Disk Confocal Microscopy",
+            "Study description": "This is a test",
+            "Email": "ozbunl@bprb.nci.nih.gov",
+            "Imaging facility name": "NCI High-Throughput Imaging Facility - Gianluca Pegoraro",
+            "Imaging facility abbreviation": "HiTIF",
+            "Sample id": "HCT116-Cas9",
+            "Sample description": "Colorectal cancer cells",
+            "Organism": "Human",
+            "Sample type": "Cell Line",
+            "Cell line": "HCT116",
+            "Intrinsic variables": "Stable Cas9 expression",
+            "Specimen location method": "Multiwell plate ID + well coordinates",
+            "Multiwell plate type": "384 Wells",
+            "Multiwell plate count": "4",
+            "Multiwell plate channel count": "3",
+            "Specimen type": "Test",
+            "Preparation method": "PFA fixation"
+        },
+        {
+            "id": 953,
+            "name": "HT001786",
+            "description": "",
+            "tags": [
+                "Organelle-specific fluorescent dye (e.g. DAPI)"
+            ],
+            "Channel 1 - Stain": "Organelle-specific fluorescent dye (e.g. DAPI)",
+            "Channel 2 - Stain": "DNA FISH",
+            "Channel 1 - Molecular Entity": "DAPI",
+            "Channel 2 - Molecular Entity": "ISS Sequencing primer - Alexa647",
+            "Biosample": "Test1",
+            "Dimensions": "384",
+            "Default Preparation Method": "PFA fixation"
+        }
+    ],
+    "ids": [
+        666,
+        667,
+        668,
+        356,
+        354,
+        953
+    ]
+}

@@ -1,0 +1,17 @@
+{
+  "organisms": [
+    { "value": "Human", "label": "Human" },
+    { "value": "GEM (Genetically modified mouse)", "label": "GEM (Genetically modified mouse)" },
+    { "value": "Mouse", "label": "Mouse" },
+    { "value": "Rat", "label": "Rat" },
+    { "value": "Rabbit", "label": "Rabbit" },
+    { "value": "Macaque", "label": "Macaque" },
+    { "value": "Zebrafish", "label": "Zebrafish" },
+    { "value": "Xenopus", "label": "Xenopus" },
+    { "value": "Drosophila", "label": "Drosophila" },
+    { "value": "Aves", "label": "Aves" },
+    { "value": "Yeast", "label": "Yeast" },
+    { "value": "Bacteria", "label": "Bacteria" },
+    { "value": "Other", "label": "Other" }
+  ]
+}

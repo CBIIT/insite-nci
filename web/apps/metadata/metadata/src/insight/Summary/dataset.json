@@ -1,0 +1,685 @@
+{
+    "status": "success",
+    "data": [
+        {
+            "id": 1465,
+            "name": "dot_product_test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1504,
+            "name": "dot_product_test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 920,
+            "name": "mousetest",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1406,
+            "name": "cellpose3_test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1453,
+            "name": "CDH001_AB_TEST",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1592,
+            "name": "EA017_TEST_87",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1661,
+            "name": "TEST_98",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1671,
+            "name": "GTR2TEST",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1673,
+            "name": "test_dataset",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1712,
+            "name": "SmokeTest-2024-11-07-11-17",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1713,
+            "name": "SmokeTest-2024-11-07-11-20",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1714,
+            "name": "SmokeTest-2024-11-07-11-23",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1719,
+            "name": "SmokeTest-2024-11-08-07-48",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1720,
+            "name": "SmokeTest-2024-11-08-07-50",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1724,
+            "name": "SmokeTest-2024-11-08-08-23",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1733,
+            "name": "CDM018_TEST",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 921,
+            "name": "mousetest",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 951,
+            "name": "Test",
+            "description": "Test Files",
+            "tags": []
+        },
+        {
+            "id": 1113,
+            "name": "segtest",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1555,
+            "name": "Tatiana_Test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1660,
+            "name": "EA017_Chromatic_Aberration_Test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1663,
+            "name": "FITC_panCK_psf_decon_test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1672,
+            "name": "95_TEST",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1675,
+            "name": "89_TEST",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1705,
+            "name": "SmokeTest-2024110608",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1715,
+            "name": "SmokeTest-2024-11-07-14-00",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1721,
+            "name": "SmokeTest-2024-11-08-08-01",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1722,
+            "name": "SmokeTest-2024-11-08-08-06",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1725,
+            "name": "SmokeTest-2024-11-08-09-07",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1726,
+            "name": "SmokeTest-2024-11-08-09-29",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1729,
+            "name": "90_TEST",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1464,
+            "name": "dot_product_test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 919,
+            "name": "import_test_dataset",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1114,
+            "name": "testslide3",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1591,
+            "name": "CDM017_SLIDES_TEST",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1603,
+            "name": "masking_test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1706,
+            "name": "SmokeTest-2024-11-06-11-10",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1707,
+            "name": "SmokeTest-2024-11-06-11-12",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1708,
+            "name": "SmokeTest-2024-11-06-11-14",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1709,
+            "name": "SmokeTest-2024-11-06-11-17",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1710,
+            "name": "SmokeTest-2024-11-06-11-19",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1711,
+            "name": "SmokeTest-2024-11-06-11-20",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1716,
+            "name": "SmokeTest-2024-11-07-14-29",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1717,
+            "name": "SmokeTest-2024-11-07-14-32",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1718,
+            "name": "SmokeTest-2024-11-07-14-33",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1723,
+            "name": "SmokeTest-2024-11-08-08-11",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1727,
+            "name": "SmokeTest-2024-11-08-09-31",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1760,
+            "name": "11-22_CD103_finetuned_test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1771,
+            "name": "mergev3 decon test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1803,
+            "name": "test_dataset_name",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 3354,
+            "name": "3_5_25 Hes7 Ach test",
+            "description": "",
+            "tags": [
+                "Brightfield Microscopy",
+                "test,test"
+            ],
+            "Imaging Facility": "CDBL Microscopy Core - Matthew Anderson",
+            "Project Scientist": "test,test",
+            "Imaging Method": "Brightfield Microscopy",
+            "Supporting Links": ""
+        },
+        {
+            "id": 1855,
+            "name": "test_dataset_name",
+            "description": "",
+            "tags": [],
+            "Project": "test_20240904_MA_HCR_Section_Test_2_2024-12-16",
+            "Organism": "Mouse",
+            "Dataset": "test_dataset_name"
+        },
+        {
+            "id": 3357,
+            "name": "2_25_25 HCR Gold Test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 2501,
+            "name": "Kedar_Test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 2107,
+            "name": "3520_TEST",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 2161,
+            "name": "test1",
+            "description": "",
+            "tags": [
+                "Brightfield Microscopy",
+                "gianluca"
+            ],
+            "Imaging Facility": "CDBL Microscopy Core - Matthew Anderson",
+            "Project Scientist": "gianluca",
+            "Imaging Method": "Brightfield Microscopy",
+            "Supporting Links": "",
+            "omeroDatasetOrPlateID": "2161"
+        },
+        {
+            "id": 2803,
+            "name": "GSK_CD11c_seg_test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 2804,
+            "name": "GSK_CD11c_mask_merging_test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 2852,
+            "name": "EA050_test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 3352,
+            "name": "test_20240904_MA_HCR_Section_Test_2",
+            "description": "",
+            "tags": [
+                "Anderson, Matthew",
+                "Spinning Disk Confocal Microscopy"
+            ],
+            "Imaging Facility": "CDBL Microscopy Core - Matthew Anderson",
+            "Project Scientist": "Anderson, Matthew",
+            "Imaging Method": "Spinning Disk Confocal Microscopy",
+            "datasetID": "3352",
+            "internalID": "omero.import_metadata_nife.study_component.dataset_level"
+        },
+        {
+            "id": 3355,
+            "name": "4_2_25 T12 scrnaseq test",
+            "description": "",
+            "tags": [
+                "Anderson, Matthew",
+                "Laser Scanning Confocal Microscopy"
+            ],
+            "Imaging Facility": "CDBL Microscopy Core - Matthew Anderson",
+            "Project Scientist": "Anderson, Matthew",
+            "Imaging Method": "Laser Scanning Confocal Microscopy",
+            "datasetID": "3355",
+            "internalID": "omero.import_metadata_nife.study_component.dataset_level"
+        },
+        {
+            "id": 3501,
+            "name": "test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 2951,
+            "name": "Joe Test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 2955,
+            "name": "2_25_25 HCR Gold Test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 3001,
+            "name": "cpsam_zarr_seg_test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 3359,
+            "name": "20240904_MA HCR Section Test 2",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 3052,
+            "name": "cpsam_zarr_seg_test",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 3056,
+            "name": "Test",
+            "description": "",
+            "tags": [
+                "Cell Line",
+                "FIB-SEM"
+            ],
+            "Experimental Status": [
+                "Control"
+            ],
+            "Sample Prep Protocol": "",
+            "Specimen prep details": "",
+            "CMM specimen UID": "CVEM0",
+            "Channel 1 - Molecular Entity": "Cilia, Centriole",
+            "Channel 1 - Stain": "Label-free",
+            "Channel 1 - Signal or Contrast Mechanism": "Backscatter electron (BSE)",
+            "omeroDatasetOrPlateID": [
+                "3056"
+            ],
+            "Biosample Name": "",
+            "Biological Entity": "",
+            "Organism (NCBI taxonomy)": "9606",
+            "Biosample Type": "Cell Line",
+            "Coarse/Informal Taxonomy": "",
+            "Anatomical Origin (NCI thesaurus)": "",
+            "Coarse anatomical origin": "",
+            "Cell Type": "",
+            "Intrinsic Variables": "Transient transfection Rab8-GFP",
+            "Extrinsic Variable - Experimental Treatment": "",
+            "Experimental Variables": "3h",
+            "Imaging Method": "FIB-SEM",
+            "Date Biosample Received": "2024-01-01",
+            "Biosample description": "HeLa cells transfected to express Rab8-GFP <<import from BSS>>",
+            "Biosample location": "Location",
+            "Sample Prep done at CMM?": "Y",
+            "Sample prep start date": "2025-01-02",
+            "Sample location": "Location",
+            "Study Type": "Study Type",
+            "Specimen prep date": "2025-06-18",
+            "Specimen location": "Specimen Location"
+        },
+        {
+            "id": 3061,
+            "name": "Test2",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 3151,
+            "name": "TEST",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 3269,
+            "name": "TEST07292025",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 1058,
+            "name": "CDM005",
+            "description": "CellDIVE Large-scale testing for mouse NSCLC",
+            "tags": []
+        },
+        {
+            "id": 402,
+            "name": "LLS_Image-HILO",
+            "description": "",
+            "tags": [
+                "3134",
+                "Brightfield",
+                "Cell Line",
+                "DNA FISH",
+                "EGFP",
+                "HILO Illumination",
+                "Q9Y5Q6",
+                "Test",
+                "sp 1 - Aug 05"
+            ],
+            "Experimental Status": "Test",
+            "Specimen Location Method": "Individual specimen ID",
+            "Experimental Treatment": "sp 1 - Aug 05",
+            "Preparation Method": "Live cell",
+            "Channel 1 -  Signal or Contrast Mechanism": "Brightfield",
+            "Channel 1 -  Stain": "DNA FISH",
+            "Channel 1 -  Molecular Entity": "EGFP",
+            "Channel 1 -  Protein of Interest": "Q9Y5Q6",
+            "Biosample Name": "biosample name - sept 4",
+            "Biosample Type": "Cell Line",
+            "Organism (NCBI taxonomy)": "9605",
+            "Coarse/Informal Taxonomy": "coarse informal",
+            "Anatomical Origin (NCI thesaurus)": "C12392",
+            "Coarse anatomical origin": "coarse anatomical origin",
+            "Cell Type": "cell type sample 1",
+            "Intrinsic Variables": "int var - sept 4",
+            "Extrinsic Variable - Experimental Treatment": "ext var sept 4",
+            "Experimental Variables": "exp var - sept 4",
+            "Dataset UID": "dataset uid",
+            "Sample Prep done at CMM?": "Y"
+        },
+        {
+            "id": 848,
+            "name": "Diana_Stavreva - 2023-05-23 - MCF7_Halo-ER_E3_50nM",
+            "description": "",
+            "tags": [
+                "E3 treatment at 100 nM for 20 min",
+                "HILO Illumination",
+                "Test",
+                "speicmen id 189493"
+            ],
+            "Experimental Status": "Test",
+            "Specimen Location Method": "Individual specimen ID",
+            "Case ID": "case id",
+            "Specimen ID": "speicmen id 189493",
+            "Preparation Method": "Live cell",
+            "Channel 1 -  Signal or Contrast Mechanism": "Fluorescence",
+            "Channel 1 -  Stain": "Fluorescent protein reporter",
+            "Channel 1 -  Molecular Entity": "HaloTag-JFX650",
+            "Channel 1 -  Protein of Interest": "Q04207",
+            "Biosample Name": "NIPBL - 2024-08-26",
+            "Biosample Description": "3134 cells with IPTG-inducible shRNA + endogenous RELA-Halo",
+            "Organism": [
+                "Mouse",
+                "Homo sapiens"
+            ],
+            "Biosample Type": "Cell Line",
+            "Species/Strain": "Mus musculus",
+            "Cell Line": "3134",
+            "Intrinsic Variables": "Endogenously tagged RELA-Halo",
+            "Extrinsic Variable - Experimental Treatment": "1 mM IPTG (3 days) + TNFa. Stained with 50 pM JFX650",
+            "Experimental Variables": "exp - var 848",
+            "Imaging Method": "HILO Illumination",
+            "Supporting Links": "Default",
+            "Study Description": "NIPBL-TF interactions",
+            "Study Component ID": "20230502_DS",
+            "Path on Server": "smb://nci-llsimage.nci.nih.gov/LLS_Image/HILO/Hager_group/Diana_Stavreva/20230502/MCF7_Halo-ER_E3_100nM",
+            "Core ID": "OMC",
+            "Study Component PI ID": "hagerg",
+            "Study Component User ID": "stavrevd",
+            "Imaging method": "HILO",
+            "Study component attachment": "Protocol for sample preparation",
+            "Study component description": "Protein dynamics by HILO",
+            "Identity": "Internal unique ID of biosample for User/requestor",
+            "Biological entity": "MCF7",
+            "Cell Line/Tissue name": "MCF7",
+            "Intrinsic variable": "Endogenous ER locus tagged with HaloTag",
+            "Extrinsic variable": "E3 treatment at 100 nM for 20 min",
+            "Experimental variables": "No variables",
+            "Dataset": "Diana_Stavreva - 2023-05-23 - MCF7_Halo-ER_E3_50nM"
+        },
+        {
+            "id": 1552,
+            "name": "CDM012_panCK_SR",
+            "description": "",
+            "tags": [],
+            "test": "test123"
+        },
+        {
+            "id": 1572,
+            "name": "Tatiana_On_Prem",
+            "description": "",
+            "tags": [],
+            "test": "test"
+        }
+    ],
+    "ids": [
+        1465,
+        1504,
+        920,
+        1406,
+        1453,
+        1592,
+        1661,
+        1671,
+        1673,
+        1712,
+        1713,
+        1714,
+        1719,
+        1720,
+        1724,
+        1733,
+        921,
+        951,
+        1113,
+        1555,
+        1660,
+        1663,
+        1672,
+        1675,
+        1705,
+        1715,
+        1721,
+        1722,
+        1725,
+        1726,
+        1729,
+        1464,
+        919,
+        1114,
+        1591,
+        1603,
+        1706,
+        1707,
+        1708,
+        1709,
+        1710,
+        1711,
+        1716,
+        1717,
+        1718,
+        1723,
+        1727,
+        1760,
+        1771,
+        1803,
+        3354,
+        1855,
+        3357,
+        2501,
+        2107,
+        2161,
+        2803,
+        2804,
+        2852,
+        3352,
+        3355,
+        3501,
+        2951,
+        2955,
+        3001,
+        3359,
+        3052,
+        3056,
+        3061,
+        3151,
+        3269,
+        1058,
+        402,
+        848,
+        1552,
+        1572
+    ]
+}

@@ -1,0 +1,11 @@
+{
+  "specimenLocationMethod": [
+    { "value": "Individual specimen ID", "label": "Individual specimen ID" },
+    { "value": "Block ID + Slide ID", "label": "Block ID + Slide ID" }
+  ],
+  "experimentalStatus": [
+    { "value": "Test", "label": "Test" },
+    { "value": "Control", "label": "Control" },
+    { "value": "N/A", "label": "N/A"}
+  ]
+}

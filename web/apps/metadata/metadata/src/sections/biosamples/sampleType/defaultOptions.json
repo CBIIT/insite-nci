@@ -1,0 +1,8 @@
+{
+  "tissueHealthStatus": [
+    { "value": "Normal", "label": "Normal" },
+    { "value": "Neoplasm", "label": "Neoplasm" },
+    { "value": "Other disease/condition", "label": "Other disease/condition" },
+    { "value": "Unknown health status", "label": "Unknown health status" }
+  ]
+}

@@ -1,0 +1,52 @@
+:root {
+  --bs-primary-rgb: 33, 38, 61;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:active, a:focus, a:hover {
+  text-decoration: underline;
+}
+
+.cover-image {
+  background-repeat: no-repeat;
+  background-size: cover; /* instead of auto */
+  background-position: right center;
+}
+
+.accordion-button .btn-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 3;
+    padding: 1.3rem 1rem;
+    background: transparent;
+
+}
+
+.accordion-button .btn-close.btn-close-sm {
+  padding: 1.1rem 1rem;
+
+}
+
+label.required::after {
+  content: " *";
+  color: red;
+  font-weight: bold;
+}
+
+.builder-block {
+  display: contents !important;
+}
+
+#omero_container form [builder-id].builder-block {
+  display: contents;
+}
+@supports not (display: contents) {
+  #omero_container form [builder-id].builder-block {
+    display: inline-block;
+    width: 100%;
+  }
+}

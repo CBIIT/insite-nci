@@ -1,0 +1,153 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        type: choice
+        options:
+          - dev
+          - prod
+        default: dev
+  push:
+    branches:
+      - "*dev"
+      - "main"
+
+jobs:
+  deploy:
+    runs-on:
+      group: cbiit-global-runners
+      labels: [self-hosted, Linux, X64]
+    # note that we can't use environments with private repos on free plans
+    environment: ${{ (endsWith(github.ref, 'dev') && 'dev') || (endsWith(github.ref, 'main') && 'prod') || inputs.environment || 'dev' }}
+    env:
+      DEPLOY_HOSTNAME: ${{ (endsWith(github.ref, 'dev') || inputs.environment == 'dev') && secrets.NIFE_HOSTNAME || secrets.NIFE_HOSTNAME }}
+      INSITE_HOSTNAME: ${{ (endsWith(github.ref, 'dev') || inputs.environment == 'dev') && secrets.INSITE_HOSTNAME || secrets.INSITE_HOSTNAME }}
+    
+    steps:
+      - name: Ensure DEPLOY_USER is set
+        run: |
+          test -n "${{ secrets.DEPLOY_USER }}" || { echo "❌ Missing secret DEPLOY_USER"; exit 1; }
+          echo "DEPLOY_USER=${{ secrets.DEPLOY_USER }}" >> "$GITHUB_ENV"
+
+      - name: Debug INSITE — inspect and sanitize SSH destination
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "RAW DEPLOY_USER:    [${DEPLOY_USER}]"
+          echo "RAW INSITE_HOSTNAME:[${INSITE_HOSTNAME}]"
+          printf 'USER hex: '; printf '%s' "$DEPLOY_USER" | od -An -t x1; echo
+          printf 'HOST hex: '; printf '%s' "$INSITE_HOSTNAME" | od -An -t x1; echo
+
+          # strip CRs/quotes/whitespace just in case
+          CLEAN_USER="$(printf '%s' "$DEPLOY_USER" | tr -d '\r\"“”' | xargs)"
+          CLEAN_HOST="$(printf '%s' "$INSITE_HOSTNAME" | tr -d '\r\"“”' | xargs)"
+          DEST="${CLEAN_USER}@${CLEAN_HOST}"
+          echo "SANITIZED DEST: [$DEST]"
+
+          # hard fail if empty
+          test -n "$CLEAN_USER" && test -n "$CLEAN_HOST" || { echo "❌ Empty user/host after sanitize"; exit 1; }
+
+      - name: INSITE - Setup SSH (write key + config)
+        shell: bash
+        env:
+          KEY: ${{ secrets.SHH_PRIVATE_KEY }}   # private key (RSA) with BEGIN/END lines
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/ssh"; chmod 700 "$RUNNER_TEMP/ssh"
+
+          # write private key
+          printf '%s\n' "$KEY" | tr -d '\r' > "$RUNNER_TEMP/ssh/deploy_key"
+          chmod 600 "$RUNNER_TEMP/ssh/deploy_key"
+          ssh-keygen -y -f "$RUNNER_TEMP/ssh/deploy_key" >/dev/null
+
+          # trust host
+          ssh-keyscan -H "$INSITE_HOSTNAME" >> "$RUNNER_TEMP/ssh/known_hosts" 2>/dev/null || true
+          chmod 644 "$RUNNER_TEMP/ssh/known_hosts"
+
+          # force using only our key
+          cat > "$RUNNER_TEMP/ssh/config" <<CFG
+          Host *
+            IdentityFile $RUNNER_TEMP/ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+            UserKnownHostsFile $RUNNER_TEMP/ssh/known_hosts
+          CFG
+
+          # don’t let an agent offer other keys
+          unset SSH_AUTH_SOCK || true
+
+          # debug
+          echo "SSH dir contents:"; ls -la "$RUNNER_TEMP/ssh"
+
+      - name: INSITE - SSH smoke test (using sanitized DEST) 
+        shell: bash
+        run: |
+          # Print the fingerprint of the CI key you actually use
+          ssh-keygen -y -f "$RUNNER_TEMP/ssh/deploy_key" | ssh-keygen -lf - || true
+          set -euo pipefail
+          DEST="$(printf '%s@%s' "$DEPLOY_USER" "$INSITE_HOSTNAME" | tr -d '\r\"“”' | xargs)"
+          echo "Connecting to: [$DEST]"
+          ssh -F "$RUNNER_TEMP/ssh/config" \
+            -o IdentitiesOnly=yes \
+            -o PreferredAuthentications=publickey \
+            -o BatchMode=yes \
+            -o ConnectTimeout=8 \
+            -vvv \
+            "$DEST" 'whoami && hostname'
+      
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Ensure DEPLOY_PATH is set
+        run: |
+          test -n "${{ secrets.DEPLOY_PATH }}" || { echo "❌ Missing secret DEPLOY_PATH"; exit 1; }
+          echo "DEPLOY_PATH=${{ secrets.DEPLOY_PATH }}" >> "$GITHUB_ENV"
+      
+      - name: INSITE - Ensure remote $DEPLOY_PATH exists and is writable
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEST="$DEPLOY_USER@$INSITE_HOSTNAME"
+          REMOTE_PATH="$DEPLOY_PATH"
+          ssh -F "$RUNNER_TEMP/ssh/config" -o IdentitiesOnly=yes -o BatchMode=yes "$DEST" \
+            "set -e;
+            P='$REMOTE_PATH';
+            echo DEPLOY_PATH=\$P;
+            [ -d \"\$P\" ] || mkdir -p \"\$P\";
+            test -w \"\$P\" || { echo '❌ Not writable'; ls -ld \"\$P\"; id; exit 1; }
+            tmp=\"\$P/.gh_write_test\";
+            rm -f \"\$tmp\";
+            touch \"\$tmp\" && rm -f \"\$tmp\";
+            echo '✅ Writable'"
+
+      - name: INSITE - Rsync deploy (to $DEPLOY_PATH)
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEST="$DEPLOY_USER@$INSITE_HOSTNAME"
+          # ensure target path exists
+          ssh -F "$RUNNER_TEMP/ssh/config" -o IdentitiesOnly=yes -o BatchMode=yes "$DEST" "mkdir -p '$DEPLOY_PATH'"
+          # sync repo (no .git files)
+          RSYNC_SSH="ssh -F $RUNNER_TEMP/ssh/config -o IdentitiesOnly=yes -o BatchMode=yes"
+          rsync -a --exclude='.git*' -e "$RSYNC_SSH" ./ "$DEST:$DEPLOY_PATH"
+      
+      - name: INSITE - Install Python packages (editable)
+        run: |
+          ssh -F "$RUNNER_TEMP/ssh/config" -o IdentitiesOnly=yes -o BatchMode=yes \
+            "$DEPLOY_USER@$INSITE_HOSTNAME" \
+            "python3 -m pip install -U pip && python3 -m pip install -e $DEPLOY_PATH/web/apps/*"
+      
+      - name: INSITE - Load OMERO config (NIFE)
+        run: |
+          ssh -F "$RUNNER_TEMP/ssh/config" -o IdentitiesOnly=yes -o BatchMode=yes \
+            "$DEPLOY_USER@$INSITE_HOSTNAME" \
+            "omero load -k --glob '$DEPLOY_PATH/web/config/00-insite.omero'"
+
+      - name: INSITE - Restart insite-web
+        run: |
+          ssh -F "$RUNNER_TEMP/ssh/config" -o IdentitiesOnly=yes -o BatchMode=yes \
+            "$DEPLOY_USER@$INSITE_HOSTNAME" \
+            "sudo -n systemctl restart omero-web && sudo -n systemctl is-active omero-web" 

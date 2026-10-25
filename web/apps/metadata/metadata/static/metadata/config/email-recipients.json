@@ -1,0 +1,29 @@
+{
+  "configurationNotes": [
+    "Replace all example.org addresses before production use.",
+    "groupRecipients keys are numeric OMERO group IDs.",
+    "groupName is documentation only; recipient selection uses the group ID key."
+  ],
+  "facilities": {
+    "9": {
+      "defaultRecipients": [
+        "kedar.narayan@nih.gov",
+        "gergelyje@nih.gov"
+      ],
+      "groupRecipients": {
+        "754": {
+          "groupName": "WeigertR",
+          "recipients": [
+            "weigertr@mail.nih.gov"
+          ]
+        },
+        "753": {
+          "groupName": "WestlakeC",
+          "recipients": [
+            "Chris.westlake@nih.gov"
+          ]
+        }
+      }
+    }
+  }
+}

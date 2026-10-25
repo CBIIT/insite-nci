@@ -1,0 +1,16 @@
+https://github.com/glencoesoftware/zeroc-ice-py-rhel9-x86_64/releases/download/20230830/zeroc_ice-3.6.5-cp39-cp39-linux_x86_64.whl
+# zeroc-ice
+omego
+omero-autotag
+omero-figure
+omero-fpbioimage
+omero-iviewer
+omero-mapr
+omero-parade
+omero-plus
+omero-py
+omero-tagsearch
+omero-web
+pathviewer
+whitenoise
+jinja2

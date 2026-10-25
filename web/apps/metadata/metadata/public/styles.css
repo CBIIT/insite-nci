@@ -1,0 +1,23 @@
+:root {
+  --bs-primary-rgb: 33, 38, 61;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:active, a:focus, a:hover {
+  text-decoration: underline;
+}
+
+.cover-image {
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position-x: right;
+}
+
+label.required::after {
+  content: " *";
+  color: red;
+  font-weight: bold;
+}

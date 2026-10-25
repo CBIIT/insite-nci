@@ -1,0 +1,212 @@
+{
+    "status": "success",
+    "data": [
+        {
+            "id": 729,
+            "name": "test1",
+            "description": "",
+            "tags": [],
+            "Storage": "Opera_Data",
+            "Sub_Storage": "Users_Data",
+            "User": "GeorgeZaki"
+        },
+        {
+            "id": 405,
+            "name": "Gianluca_Vast_Test",
+            "description": "",
+            "tags": [
+                "p-35",
+                "study"
+            ],
+            "Dataset / Screen ID": "p-35",
+            "Imaging Facility": "NCI High-Throughput Imaging Facility - Gianluca Pegoraro",
+            "Principal Investigator": "PEGORARO, GIANLUCA",
+            "Project Scientist": "gianluca",
+            "Imaging Method": "Brightfield Microscopy",
+            "Project Scientist Email": "gianluca@nih.gov"
+        },
+        {
+            "id": 406,
+            "name": "Joe_Test",
+            "description": "",
+            "tags": [],
+            "Imaging facility": "NCI High-Throughput Imaging Facility - Gianluca Pegoraro",
+            "Principal investigator": "PEGORARO, GIANLUCA",
+            "Project scientist": "Ozbun, Laurent",
+            "Dataset id": "210119_sgRNA_Epigenome_Screen",
+            "Imaging method": "Spinning Disk Confocal Microscopy",
+            "Study description": "This is a test",
+            "Email": "ozbunl@bprb.nci.nih.gov",
+            "Imaging facility name": "NCI High-Throughput Imaging Facility - Gianluca Pegoraro",
+            "Imaging facility abbreviation": "HiTIF",
+            "Sample id": "HCT116-Cas9",
+            "Sample description": "Colorectal cancer cells",
+            "Organism": "Human",
+            "Sample type": "Cell Line",
+            "Cell line": "HCT116",
+            "Intrinsic variables": "Stable Cas9 expression",
+            "Specimen location method": "Multiwell plate ID + well coordinates",
+            "Multiwell plate type": "384 Wells",
+            "Multiwell plate count": "4",
+            "Multiwell plate channel count": "3",
+            "Specimen type": "Test",
+            "Preparation method": "PFA fixation"
+        },
+        {
+            "id": 407,
+            "name": "Gianluca_Vast_Test",
+            "description": "",
+            "tags": [
+                "p-35",
+                "p-35 - A",
+                "study name - w1"
+            ],
+            "Dataset / Screen ID": "study name - w1",
+            "Imaging Facility": "NCI High-Throughput Imaging Facility - Gianluca Pegoraro",
+            "Principal Investigator": "CAHOON, ELIZABETH",
+            "Project Scientist": "Anderson, Matthew",
+            "Imaging Method": "Spinning Disk Confocal Microscopy",
+            "Project Scientist Email": "isabel.quintanilla@nih.gov"
+        },
+        {
+            "id": 410,
+            "name": "Test",
+            "description": "",
+            "tags": [
+                "Test"
+            ],
+            "Dataset / Screen ID": "Test",
+            "Imaging Facility": "NCI High-Throughput Imaging Facility - Gianluca Pegoraro",
+            "Principal Investigator": "ABNET, CHRISTIAN",
+            "Project Scientist": "tatiana",
+            "Imaging Method": "Spinning Disk Confocal Microscopy",
+            "Project Scientist Email": "isabel.quintanilla@nih.gov"
+        },
+        {
+            "id": 552,
+            "name": "Joe_Test",
+            "description": "",
+            "tags": [
+                "552"
+            ],
+            "Storage": "mnt",
+            "Sub_Storage": "Frederick-Isilon",
+            "User": "Gianluca",
+            "Dataset / Screen ID": "552",
+            "Imaging Facility": "NCI High-Throughput Imaging Facility - Gianluca Pegoraro",
+            "Principal Investigator": "PEGORARO, GIANLUCA - Test append group meta",
+            "screenID": [
+                "552"
+            ],
+            "namespace": [
+                "nife.study.screen_level",
+                "nife.study_component.screen_level"
+            ],
+            "internalID": [
+                "omero.import_metadata_nife.study.screen_level",
+                "omero.import_metadata_nife.study_component.screen_level"
+            ],
+            "Project Scientist": "Quintanilla-Leo, Isabel",
+            "Imaging Method": "Spinning Disk Confocal Microscopy",
+            "Supporting Links": "https://mynotebook.labarchives.com/share/HiTIF-Pooled%2520Optical%2520Screens/ODkuN3w5MzMwMzAvNjkvVHJlZU5vZGUvMTMzMjE2MjMwMXwyMjcuNw==",
+            "Study Description": "Titration of Phi29 enzyme in commercial vs. home made buffer for In Situ Sequencing.",
+            "Project Scientist Email": "isabel.quintanilla@nih.gov"
+        },
+        {
+            "id": 666,
+            "name": "Test_Project",
+            "description": "",
+            "tags": []
+        },
+        {
+            "id": 736,
+            "name": "240726-IQL-POP-035-ISS-Phi29Homemade-titration_20240726_120833",
+            "description": "",
+            "tags": [
+                "TEST - BATCH",
+                "Test - submit form",
+                "Test - submit form - 123"
+            ],
+            "Storage": "Opera_Data",
+            "Sub_Storage": "CV8000_Images",
+            "User": "Isabel",
+            "Principal Investigator": [
+                "PEGORARO, GIANLUCA",
+                "ACHARYA, JAIRAJ"
+            ],
+            "Project Scientist": [
+                "Quintanilla-Leo, Isabel",
+                "Test"
+            ],
+            "Study Description": [
+                "Titration of Phi29 enzyme in commercial vs. home made buffer for In Situ Sequencing."
+            ],
+            "Supporting Links": [
+                "https://mynotebook.labarchives.com/share/HiTIF-Pooled%2520Optical%2520Screens/ODkuN3w5MzMwMzAvNjkvVHJlZU5vZGUvMTMzMjE2MjMwMXwyMjcuNw=="
+            ],
+            "Email": [
+                "isabel.quintanilla@nih.gov"
+            ],
+            "Imaging Facility": [
+                "NCI High-Throughput Imaging Facility - Gianluca Pegoraro"
+            ],
+            "Imaging Facility Abbreviation": [
+                "HiTIF"
+            ],
+            "Imaging Method": [
+                "Spinning Disk Confocal Microscopy",
+                "Brightfield Microscopy"
+            ],
+            "Imaging Method Other": [
+                ""
+            ],
+            "ScreenID": [
+                "736"
+            ],
+            "internalID": [
+                "omero.import_metadata",
+                "omero.import_metadata_Screen"
+            ],
+            "Dataset / Screen ID": "TEST - BATCH",
+            "Project Scientist Email": "form@gmail.com"
+        },
+        {
+            "id": 751,
+            "name": "demo2",
+            "description": "",
+            "tags": [
+                "751"
+            ],
+            "Dataset / Screen ID": "751",
+            "Imaging Facility": "NCI High-Throughput Imaging Facility - Gianluca Pegoraro",
+            "Principal Investigator": "PEGORARO, GIANLUCA - Test append group meta",
+            "screenID": [
+                "751"
+            ],
+            "namespace": [
+                "nife.study.screen_level",
+                "nife.study_component.screen_level"
+            ],
+            "internalID": [
+                "omero.import_metadata_nife.study.screen_level",
+                "omero.import_metadata_nife.study_component.screen_level"
+            ],
+            "Project Scientist": "Quintanilla-Leo, Isabel",
+            "Imaging Method": "Spinning Disk Confocal Microscopy",
+            "Supporting Links": "https://mynotebook.labarchives.com/share/HiTIF-Pooled%2520Optical%2520Screens/ODkuN3w5MzMwMzAvNjkvVHJlZU5vZGUvMTMzMjE2MjMwMXwyMjcuNw==",
+            "Study Description": "Titration of Phi29 enzyme in commercial vs. home made buffer for In Situ Sequencing.",
+            "Project Scientist Email": "isabel.quintanilla@nih.gov"
+        }
+    ],
+    "ids": [
+        729,
+        405,
+        406,
+        407,
+        410,
+        552,
+        666,
+        736,
+        751
+    ]
+}

@@ -323,3 +323,9 @@ jobs:
             exit 1
           fi
           REMOTE
+
+      - name: Load INSITE OMERO configuration
+        run: |
+          set -euo pipefail
+          ssh -F "$SSH_DIR/config" insite-target \
+            "omero load -k --glob '$DEPLOY_PATH/web/config/00-insite.omero'"

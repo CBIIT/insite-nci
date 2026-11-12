@@ -21,31 +21,16 @@ jobs:
       group: cbiit-global-runners
       labels: [self-hosted, Linux, X64]
     # note that we can't use environments with private repos on free plans
-    # environment: ${{ (endsWith(github.ref, 'dev') && 'dev') || (endsWith(github.ref, 'main') && 'prod') || inputs.environment || 'dev' }}
-    # env:
-    #   DEPLOY_HOSTNAME: ${{ (endsWith(github.ref, 'dev') || inputs.environment == 'dev') && secrets.NIFE_HOSTNAME || secrets.NIFE_HOSTNAME }}
-    #   INSITE_HOSTNAME: ${{ (endsWith(github.ref, 'dev') || inputs.environment == 'dev') && secrets.INSITE_HOSTNAME || secrets.INSITE_HOSTNAME }}
-    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'dev') }}
-
+    environment: ${{ (endsWith(github.ref, 'dev') && 'dev') || (endsWith(github.ref, 'main') && 'prod') || inputs.environment || 'dev' }}
     env:
-      DEPLOY_HOSTNAME: ${{ secrets.NIFE_HOSTNAME }}
-      INSITE_HOSTNAME: ${{ secrets.INSITE_HOSTNAME }}
-      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-      KEY: ${{ secrets.SHH_PRIVATE_KEY }}
-
+      # DEPLOY_HOSTNAME: ${{ (endsWith(github.ref, 'dev') || inputs.environment == 'dev') && secrets.NIFE_HOSTNAME || secrets.NIFE_HOSTNAME }}
+      INSITE_HOSTNAME: ${{ (endsWith(github.ref, 'dev') || inputs.environment == 'dev') && secrets.INSITE_HOSTNAME || secrets.INSITE_HOSTNAME }}
+    
     steps:
-      # - name: Ensure DEPLOY_USER is set
-      #   run: |
-      #     test -n "${{ secrets.DEPLOY_USER }}" || { echo "❌ Missing secret DEPLOY_USER"; exit 1; }
-      #     echo "DEPLOY_USER=${{ secrets.DEPLOY_USER }}" >> "$GITHUB_ENV"
-      - name: Check deployment user
-        shell: bash
+      - name: Ensure DEPLOY_USER is set
         run: |
-          test -n "$DEPLOY_USER" || {
-            echo "Missing DEPLOY_USER in the selected environment"
-            exit 1
-          }
-          echo "DEPLOY_USER is available."
+          test -n "${{ secrets.DEPLOY_USER }}" || { echo "❌ Missing secret DEPLOY_USER"; exit 1; }
+          echo "DEPLOY_USER=${{ secrets.DEPLOY_USER }}" >> "$GITHUB_ENV"
 
       - name: Debug INSITE — inspect and sanitize SSH destination
         shell: bash
@@ -67,8 +52,8 @@ jobs:
 
       - name: INSITE - Setup SSH (write key + config)
         shell: bash
-        # env:
-        #   KEY: ${{ secrets.SHH_PRIVATE_KEY }}   # private key (RSA) with BEGIN/END lines
+        env:
+          KEY: ${{ secrets.SHH_PRIVATE_KEY }}   # private key (RSA) with BEGIN/END lines
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/ssh"; chmod 700 "$RUNNER_TEMP/ssh"

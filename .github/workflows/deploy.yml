@@ -303,3 +303,9 @@ jobs:
           rsync -a --exclude='.git*' \
             -e "ssh -F \"$SSH_DIR/config\"" \
             ./ "insite-target:$DEPLOY_PATH/"
+
+      - name: INSITE - Install Python packages (editable)
+        run: |
+          ssh -F "$RUNNER_TEMP/ssh/config" -o IdentitiesOnly=yes -o BatchMode=yes \
+            "$DEPLOY_USER@$INSITE_HOSTNAME" \
+            "python3 -m pip install -U pip && python3 -m pip install -e $DEPLOY_PATH/web/apps/*"

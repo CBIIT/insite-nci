@@ -31,6 +31,7 @@ jobs:
       DEPLOY_HOSTNAME: ${{ secrets.NIFE_HOSTNAME }}
       INSITE_HOSTNAME: ${{ secrets.INSITE_HOSTNAME }}
       DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      KEY: ${{ secrets.SHH_PRIVATE_KEY }}
 
     steps:
       # - name: Ensure DEPLOY_USER is set
@@ -66,8 +67,8 @@ jobs:
 
       - name: INSITE - Setup SSH (write key + config)
         shell: bash
-        env:
-          KEY: ${{ secrets.SHH_PRIVATE_KEY }}   # private key (RSA) with BEGIN/END lines
+        # env:
+        #   KEY: ${{ secrets.SHH_PRIVATE_KEY }}   # private key (RSA) with BEGIN/END lines
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/ssh"; chmod 700 "$RUNNER_TEMP/ssh"

@@ -24,14 +24,14 @@ jobs:
     # environment: ${{ (endsWith(github.ref, 'dev') && 'dev') || (endsWith(github.ref, 'main') && 'prod') || inputs.environment || 'dev' }}
     environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'dev') }}
     env:
-      DEPLOY_HOSTNAME: ${{ (endsWith(github.ref, 'dev') || inputs.environment == 'dev') && secrets.NIFE_HOSTNAME || secrets.NIFE_HOSTNAME }}
-      INSITE_HOSTNAME: ${{ (endsWith(github.ref, 'dev') || inputs.environment == 'dev') && secrets.INSITE_HOSTNAME || secrets.INSITE_HOSTNAME }}
-    
+      DEPLOY_HOSTNAME: ${{ secrets.NIFE_HOSTNAME }}
+      INSITE_HOSTNAME: ${{ secrets.INSITE_HOSTNAME }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
     steps:
-      - name: Ensure DEPLOY_USER is set
-        run: |
-          test -n "${{ secrets.DEPLOY_USER }}" || { echo "❌ Missing secret DEPLOY_USER"; exit 1; }
-          echo "DEPLOY_USER=${{ secrets.DEPLOY_USER }}" >> "$GITHUB_ENV"
+      # - name: Ensure DEPLOY_USER is set
+      #   run: |
+      #     test -n "${{ secrets.DEPLOY_USER }}" || { echo "❌ Missing secret DEPLOY_USER"; exit 1; }
+      #     echo "DEPLOY_USER=${{ secrets.DEPLOY_USER }}" >> "$GITHUB_ENV"
 
       - name: Validate deployment secrets and SSH private key
         shell: bash

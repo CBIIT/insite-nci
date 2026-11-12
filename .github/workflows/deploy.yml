@@ -276,3 +276,23 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+
+      - name: Ensure deployment directory is writable
+        run: |
+          set -euo pipefail
+
+          ssh -F "$SSH_DIR/config" insite-target \
+            "bash -s -- '$DEPLOY_PATH'" <<'REMOTE'
+          set -euo pipefail
+          path="$1"
+
+          mkdir -p "$path"
+          test -w "$path" || {
+            echo "Deployment directory is not writable"
+            exit 1
+          }
+
+          probe="$(mktemp "$path/.gh-write-test.XXXXXX")"
+          rm -f "$probe"
+          echo "Deployment directory is writable"
+          REMOTE

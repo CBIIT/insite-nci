@@ -21,45 +21,16 @@ jobs:
       group: cbiit-global-runners
       labels: [self-hosted, Linux, X64]
     # note that we can't use environments with private repos on free plans
-    # environment: ${{ (endsWith(github.ref, 'dev') && 'dev') || (endsWith(github.ref, 'main') && 'prod') || inputs.environment || 'dev' }}
-    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'dev') }}
+    environment: ${{ (endsWith(github.ref, 'dev') && 'dev') || (endsWith(github.ref, 'main') && 'prod') || inputs.environment || 'dev' }}
     env:
-      DEPLOY_HOSTNAME: ${{ secrets.NIFE_HOSTNAME }}
-      INSITE_HOSTNAME: ${{ secrets.INSITE_HOSTNAME }}
-      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      DEPLOY_HOSTNAME: ${{ (endsWith(github.ref, 'dev') || inputs.environment == 'dev') && secrets.NIFE_HOSTNAME || secrets.NIFE_HOSTNAME }}
+      INSITE_HOSTNAME: ${{ (endsWith(github.ref, 'dev') || inputs.environment == 'dev') && secrets.INSITE_HOSTNAME || secrets.INSITE_HOSTNAME }}
+
     steps:
-      # - name: Ensure DEPLOY_USER is set
-      #   run: |
-      #     test -n "${{ secrets.DEPLOY_USER }}" || { echo "❌ Missing secret DEPLOY_USER"; exit 1; }
-      #     echo "DEPLOY_USER=${{ secrets.DEPLOY_USER }}" >> "$GITHUB_ENV"
-
-      - name: Validate deployment secrets and SSH private key
-        shell: bash
-        env:
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          INSITE_HOSTNAME: ${{ secrets.INSITE_HOSTNAME }}
-          KEY: ${{ secrets.SHH_PRIVATE_KEY }}
+      - name: Ensure DEPLOY_USER is set
         run: |
-          set -euo pipefail
-
-          test -n "$DEPLOY_USER" || { echo "Missing DEPLOY_USER"; exit 1; }
-          test -n "$INSITE_HOSTNAME" || { echo "Missing INSITE_HOSTNAME"; exit 1; }
-          test -n "$KEY" || { echo "Missing SHH_PRIVATE_KEY"; exit 1; }
-
-          KEY_DIR="$(mktemp -d "$RUNNER_TEMP/ssh-check.XXXXXX")"
-          trap 'rm -rf "$KEY_DIR"' EXIT
-          chmod 700 "$KEY_DIR"
-
-          printf '%s\n' "$KEY" | tr -d '\r' > "$KEY_DIR/deploy_key"
-          chmod 600 "$KEY_DIR/deploy_key"
-
-          if ssh-keygen -y -P '' -f "$KEY_DIR/deploy_key" >/dev/null; then
-            echo "SSH private key is readable without a passphrase."
-          else
-            echo "Key validation failed: check the complete private-key contents."
-            echo "A passphrase-protected key needs additional authentication setup."
-            exit 1
-          fi
+          test -n "${{ secrets.DEPLOY_USER }}" || { echo "❌ Missing secret DEPLOY_USER"; exit 1; }
+          echo "DEPLOY_USER=${{ secrets.DEPLOY_USER }}" >> "$GITHUB_ENV"
 
       - name: Debug INSITE — inspect and sanitize SSH destination
         shell: bash

@@ -153,209 +153,68 @@
 #             "$DEPLOY_USER@$INSITE_HOSTNAME" \
 #             "sudo -n systemctl restart omero-web && sudo -n systemctl is-active omero-web" 
 
-name: Deploy
+name: Test INSITE SSH
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: "Environment to deploy to"
-        required: true
-        type: choice
-        options:
-          - dev
-          - prod
-        default: dev
-  push:
-    branches:
-      - "*dev"
-      - "main"
 
 permissions:
   contents: read
 
 jobs:
-  deploy:
+  ssh-test:
     runs-on:
       group: cbiit-global-runners
       labels: [self-hosted, Linux, X64]
 
-    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'dev') }}
-
-    concurrency:
-      group: insite-deploy-${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'dev') }}
-      cancel-in-progress: false
-
-    defaults:
-      run:
-        shell: bash
+    environment: dev
 
     env:
-      DEPLOY_ENV: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'dev') }}
       DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
       INSITE_HOSTNAME: ${{ secrets.INSITE_HOSTNAME }}
-      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
     steps:
-      - name: Check all required secrets
-        env:
-          KEY: ${{ secrets.SHH_PRIVATE_KEY }}
-          KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+      - name: Validate secrets and test SSH
+        shell: bash
         run: |
           set -euo pipefail
-          echo "Repository: $GITHUB_REPOSITORY"
-          echo "Environment: $DEPLOY_ENV"
 
           missing=0
-
-          for name in DEPLOY_USER INSITE_HOSTNAME DEPLOY_PATH KEY KNOWN_HOSTS; do
-            case "$name" in
-              KEY) label=SHH_PRIVATE_KEY ;;
-              KNOWN_HOSTS) label=SSH_KNOWN_HOSTS ;;
-              *) label="$name" ;;
-            esac
-
+          for name in DEPLOY_USER INSITE_HOSTNAME KEY; do
             if [[ -z "${!name}" ]]; then
-              echo "::error::Missing secret: $label"
+              echo "::error::Missing $name in dev environment secrets"
               missing=1
             fi
           done
+          (( missing == 0 )) || exit 1
 
-          if (( missing )); then
-            echo "Check this repository's selected environment secrets."
-            exit 1
-          fi
-
-          # Validate values instead of silently modifying them.
-          [[ "$DEPLOY_USER" =~ ^[a-zA-Z0-9_][a-zA-Z0-9_.-]*$ ]] || {
-            echo "::error::DEPLOY_USER must contain only the SSH username."
-            exit 1
-          }
-
-          [[ "$INSITE_HOSTNAME" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]*$ ]] || {
-            echo "::error::INSITE_HOSTNAME must be a hostname or IPv4 address."
-            exit 1
-          }
-
-          [[ "$DEPLOY_PATH" =~ ^/[a-zA-Z0-9_./-]+$ ]] || {
-            echo "::error::DEPLOY_PATH must be an absolute path without spaces or shell characters."
-            exit 1
-          }
-
-          echo "All required secrets are available."
-
-      - name: Set up and validate SSH
-        env:
-          KEY: ${{ secrets.SHH_PRIVATE_KEY }}
-          KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
-        run: |
-          set -euo pipefail
           umask 077
-
           SSH_DIR="$(mktemp -d "$RUNNER_TEMP/insite-ssh.XXXXXX")"
-          echo "SSH_DIR=$SSH_DIR" >> "$GITHUB_ENV"
+          trap 'rm -rf "$SSH_DIR"' EXIT
 
           printf '%s\n' "$KEY" | tr -d '\r' > "$SSH_DIR/deploy_key"
 
-          if ! ssh-keygen -y -P '' -f "$SSH_DIR/deploy_key" >/dev/null; then
-            echo "::error::SHH_PRIVATE_KEY is invalid or requires a passphrase."
-            echo "Provide the complete private key. Encrypted keys require additional passphrase handling."
-            exit 1
-          fi
-
-          printf '%s\n' "$KNOWN_HOSTS" | tr -d '\r' > "$SSH_DIR/known_hosts"
-
-          ssh-keygen -F "$INSITE_HOSTNAME" \
-            -f "$SSH_DIR/known_hosts" >/dev/null || {
-              echo "::error::SSH_KNOWN_HOSTS has no entry for INSITE_HOSTNAME."
-              exit 1
-            }
-
-          cat > "$SSH_DIR/config" <<CFG
-          Host insite-target
-            HostName $INSITE_HOSTNAME
-            User $DEPLOY_USER
-            IdentityFile "$SSH_DIR/deploy_key"
-            IdentityAgent none
-            IdentitiesOnly yes
-            PreferredAuthentications publickey
-            BatchMode yes
-            StrictHostKeyChecking yes
-            UserKnownHostsFile "$SSH_DIR/known_hosts"
-            ConnectTimeout 10
-          CFG
-
-          echo "Private key and SSH configuration validated."
-
-      - name: Test SSH connection
-        run: |
-          set -euo pipefail
-          ssh -F "$SSH_DIR/config" insite-target 'whoami && hostname'
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-
-      - name: Check deployment directory
-        run: |
-          set -euo pipefail
-          ssh -F "$SSH_DIR/config" insite-target \
-            "bash -s -- '$DEPLOY_PATH'" <<'REMOTE'
-          set -euo pipefail
-          path="$1"
-          mkdir -p "$path"
-          test -w "$path" || {
-            echo "Deployment directory is not writable."
+          ssh-keygen -y -P '' -f "$SSH_DIR/deploy_key" >/dev/null || {
+            echo "::error::Private key is invalid or requires a passphrase"
             exit 1
           }
-          probe="$(mktemp "$path/.gh-write-test.XXXXXX")"
-          rm -f "$probe"
-          echo "Deployment directory is writable."
-          REMOTE
 
-      - name: Deploy files
-        run: |
-          set -euo pipefail
-          rsync -a --exclude='.git*' \
-            -e "ssh -F \"$SSH_DIR/config\"" \
-            ./ "insite-target:$DEPLOY_PATH/"
+          ssh-keyscan -T 10 -H "$INSITE_HOSTNAME" \
+            > "$SSH_DIR/known_hosts"
 
-      - name: Install Python packages
-        run: |
-          set -euo pipefail
-          ssh -F "$SSH_DIR/config" insite-target \
-            "bash -s -- '$DEPLOY_PATH'" <<'REMOTE'
-          set -euo pipefail
-          path="$1"
-          found=0
-          for app in "$path"/web/apps/*; do
-            if [[ -f "$app/pyproject.toml" || -f "$app/setup.py" ]]; then
-              python3 -m pip install -e "$app"
-              found=1
-            fi
-          done
-          if (( ! found )); then
-            echo "No installable Python packages found under web/apps."
+          test -s "$SSH_DIR/known_hosts" || {
+            echo "::error::Could not obtain the server SSH host key"
             exit 1
-          fi
-          REMOTE
+          }
 
-      - name: Load INSITE OMERO configuration
-        run: |
-          set -euo pipefail
-          ssh -F "$SSH_DIR/config" insite-target \
-            "omero load -k --glob '$DEPLOY_PATH/web/config/00-insite.omero'"
-
-      - name: Restart OMERO web
-        run: |
-          set -euo pipefail
-          ssh -F "$SSH_DIR/config" insite-target \
-            'sudo -n systemctl restart omero-web && sudo -n systemctl is-active omero-web'
-
-      - name: Remove temporary SSH files
-        if: always()
-        run: |
-          if [[ -n "${SSH_DIR:-}" && -d "$SSH_DIR" ]]; then
-            rm -rf -- "$SSH_DIR"
-          fi
+          ssh \
+            -i "$SSH_DIR/deploy_key" \
+            -o IdentityAgent=none \
+            -o IdentitiesOnly=yes \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$SSH_DIR/known_hosts" \
+            -o ConnectTimeout=10 \
+            "$DEPLOY_USER@$INSITE_HOSTNAME" \
+            'whoami && hostname'

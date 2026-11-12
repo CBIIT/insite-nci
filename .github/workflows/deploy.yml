@@ -157,6 +157,19 @@ name: Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        type: choice
+        options:
+          - dev
+          - prod
+        default: dev
+  
+  push:
+    branches:
+      - "*dev"
+      - "main"
 
 permissions:
   contents: read

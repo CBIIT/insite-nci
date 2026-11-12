@@ -329,3 +329,9 @@ jobs:
           set -euo pipefail
           ssh -F "$SSH_DIR/config" insite-target \
             "omero load -k --glob '$DEPLOY_PATH/web/config/00-insite.omero'"
+      
+      - name: Restart Insite OMERO web
+        run: |
+          set -euo pipefail
+          ssh -F "$SSH_DIR/config" insite-target \
+            'sudo -n systemctl restart omero-web && sudo -n systemctl is-active omero-web'

@@ -297,15 +297,29 @@ jobs:
           rm -f "$probe"
           echo "Deployment directory is writable"
 
-      - name: INSITE - Rsync deploy (to $DEPLOY_PATH)
-        shell: bash
+      - name: Deploy files
         run: |
           set -euo pipefail
-          DEST="$DEPLOY_USER@$INSITE_HOSTNAME"
-          # ensure target path exists
-          ssh -F "$RUNNER_TEMP/ssh/config" -o IdentitiesOnly=yes -o BatchMode=yes "$DEST" "mkdir -p '$DEPLOY_PATH'"
-          # sync repo (no .git files)
-          RSYNC_SSH="ssh -F $RUNNER_TEMP/ssh/config -o IdentitiesOnly=yes -o BatchMode=yes"
-          rsync -a --exclude='.git*' -e "$RSYNC_SSH" ./ "$DEST:$DEPLOY_PATH"
+          rsync -a --exclude='.git*' \
+            -e "ssh -F \"$SSH_DIR/config\"" \
+            ./ "insite-target:$DEPLOY_PATH/"
 
-      
+      - name: Install Python packages
+        run: |
+          set -euo pipefail
+          ssh -F "$SSH_DIR/config" insite-target \
+            "bash -s -- '$DEPLOY_PATH'" <<'REMOTE'
+          set -euo pipefail
+          path="$1"
+          found=0
+          for app in "$path"/web/apps/*; do
+            if [[ -f "$app/pyproject.toml" || -f "$app/setup.py" ]]; then
+              python3 -m pip install -e "$app"
+              found=1
+            fi
+          done
+          if (( ! found )); then
+            echo "No installable Python packages found under web/apps."
+            exit 1
+          fi
+          REMOTE

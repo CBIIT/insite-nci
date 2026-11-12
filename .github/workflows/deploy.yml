@@ -231,3 +231,43 @@ jobs:
             -o ConnectTimeout=10 \
             "$DEPLOY_USER@$INSITE_HOSTNAME" \
             'whoami && hostname'
+
+      - name: Set up SSH and test connection
+        env:
+          KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          umask 077
+
+          SSH_DIR="$(mktemp -d "$RUNNER_TEMP/insite-ssh.XXXXXX")"
+          echo "SSH_DIR=$SSH_DIR" >> "$GITHUB_ENV"
+
+          printf '%s\n' "$KEY" | tr -d '\r' > "$SSH_DIR/deploy_key"
+
+          ssh-keygen -y -P '' -f "$SSH_DIR/deploy_key" >/dev/null || {
+            echo "::error::Private key is invalid or requires a passphrase"
+            exit 1
+          }
+
+          ssh-keyscan -T 10 -H "$INSITE_HOSTNAME" \
+            > "$SSH_DIR/known_hosts"
+
+          test -s "$SSH_DIR/known_hosts" || {
+            echo "::error::Could not obtain the server SSH host key"
+            exit 1
+          }
+
+          cat > "$SSH_DIR/config" <<CFG
+          Host insite-target
+            HostName $INSITE_HOSTNAME
+            User $DEPLOY_USER
+            IdentityFile "$SSH_DIR/deploy_key"
+            IdentityAgent none
+            IdentitiesOnly yes
+            BatchMode yes
+            StrictHostKeyChecking yes
+            UserKnownHostsFile "$SSH_DIR/known_hosts"
+            ConnectTimeout 10
+          CFG
+
+          ssh -F "$SSH_DIR/config" insite-target 'whoami && hostname'

@@ -271,3 +271,8 @@ jobs:
           CFG
 
           ssh -F "$SSH_DIR/config" insite-target 'whoami && hostname'
+      
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false

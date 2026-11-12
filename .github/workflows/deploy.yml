@@ -186,6 +186,7 @@ jobs:
       DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
       INSITE_HOSTNAME: ${{ secrets.INSITE_HOSTNAME }}
       KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
 
     steps:
       - name: Validate secrets and test SSH
@@ -295,4 +296,3 @@ jobs:
           probe="$(mktemp "$path/.gh-write-test.XXXXXX")"
           rm -f "$probe"
           echo "Deployment directory is writable"
-          REMOTE

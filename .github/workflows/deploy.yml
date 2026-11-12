@@ -297,15 +297,15 @@ jobs:
           rm -f "$probe"
           echo "Deployment directory is writable"
 
-      - name: Deploy files
+      - name: INSITE - Rsync deploy (to $DEPLOY_PATH)
+        shell: bash
         run: |
           set -euo pipefail
-          rsync -a --exclude='.git*' \
-            -e "ssh -F \"$SSH_DIR/config\"" \
-            ./ "insite-target:$DEPLOY_PATH/"
+          DEST="$DEPLOY_USER@$INSITE_HOSTNAME"
+          # ensure target path exists
+          ssh -F "$RUNNER_TEMP/ssh/config" -o IdentitiesOnly=yes -o BatchMode=yes "$DEST" "mkdir -p '$DEPLOY_PATH'"
+          # sync repo (no .git files)
+          RSYNC_SSH="ssh -F $RUNNER_TEMP/ssh/config -o IdentitiesOnly=yes -o BatchMode=yes"
+          rsync -a --exclude='.git*' -e "$RSYNC_SSH" ./ "$DEST:$DEPLOY_PATH"
 
-      - name: INSITE - Install Python packages (editable)
-        run: |
-          ssh -F "$RUNNER_TEMP/ssh/config" -o IdentitiesOnly=yes -o BatchMode=yes \
-            "$DEPLOY_USER@$INSITE_HOSTNAME" \
-            "python3 -m pip install -U pip && python3 -m pip install -e $DEPLOY_PATH/web/apps/*"
+      

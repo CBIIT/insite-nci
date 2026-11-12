@@ -21,7 +21,8 @@ jobs:
       group: cbiit-global-runners
       labels: [self-hosted, Linux, X64]
     # note that we can't use environments with private repos on free plans
-    environment: ${{ (endsWith(github.ref, 'dev') && 'dev') || (endsWith(github.ref, 'main') && 'prod') || inputs.environment || 'dev' }}
+    # environment: ${{ (endsWith(github.ref, 'dev') && 'dev') || (endsWith(github.ref, 'main') && 'prod') || inputs.environment || 'dev' }}
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'dev') }}
     env:
       DEPLOY_HOSTNAME: ${{ (endsWith(github.ref, 'dev') || inputs.environment == 'dev') && secrets.NIFE_HOSTNAME || secrets.NIFE_HOSTNAME }}
       INSITE_HOSTNAME: ${{ (endsWith(github.ref, 'dev') || inputs.environment == 'dev') && secrets.INSITE_HOSTNAME || secrets.INSITE_HOSTNAME }}

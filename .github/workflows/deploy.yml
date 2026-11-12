@@ -296,3 +296,10 @@ jobs:
           probe="$(mktemp "$path/.gh-write-test.XXXXXX")"
           rm -f "$probe"
           echo "Deployment directory is writable"
+
+      - name: Deploy files
+        run: |
+          set -euo pipefail
+          rsync -a --exclude='.git*' \
+            -e "ssh -F \"$SSH_DIR/config\"" \
+            ./ "insite-target:$DEPLOY_PATH/"
